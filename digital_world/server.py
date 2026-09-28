@@ -50,6 +50,7 @@ class Handler(BaseHTTPRequestHandler):
             "/index.html": ("web/index.html", "text/html; charset=utf-8"),
             "/app.js": ("web/app.js", "text/javascript; charset=utf-8"),
             "/style.css": ("web/style.css", "text/css; charset=utf-8"),
+            "/world3d.js": ("web/world3d.js", "text/javascript; charset=utf-8"),
         }
         if self.path in files:
             filename, content_type = files[self.path]
