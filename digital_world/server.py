@@ -5,6 +5,8 @@ from pathlib import Path
 import json
 import threading
 import time
+import threading
+import time
 
 from .bootstrap import create_genesis
 from .monitor import Monitor
@@ -12,6 +14,15 @@ from .monitor import Monitor
 ROOT = Path(__file__).resolve().parent.parent
 genesis = create_genesis()
 monitor = Monitor(genesis)
+
+
+def autonomous_loop() -> None:
+    while genesis.alive:
+        genesis.autonomous_step()
+        time.sleep(0.35)
+
+
+threading.Thread(target=autonomous_loop, daemon=True, name="genesis-autonomy").start()
 
 
 def world_loop() -> None:
