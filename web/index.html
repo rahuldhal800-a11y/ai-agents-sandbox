@@ -1,69 +1,17 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#05070a">
-<title>Genesis — Digital World</title>
-<link rel="stylesheet" href="/style.css">
-</head>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07110d"><title>Genesis — Digital World</title><link rel="stylesheet" href="/style.css"></head>
 <body>
-<header>
-  <div>
-    <div class="eyebrow">DIGITAL WORLD / DIGITAL BEING</div>
-    <h1>Genesis</h1>
-    <p class="subtitle">A living experimental world — not a chatbot.</p>
-  </div>
-  <div id="status" class="status">CONNECTING</div>
-</header>
-
-<main>
-  <section class="world">
-    <div class="world-grid"></div>
-    <div class="orb" aria-label="Genesis core">
-      <div class="core"></div><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
-      <div class="pulse"></div>
-    </div>
-    <div class="being-name">GENESIS</div>
-    <div id="tick">TICK 0</div>
-    <div id="activityState" class="activity-state">INITIALIZING WORLD</div>
-  </section>
-
-  <section class="world-map panel"><div class="panel-head"><div><span class="eyebrow">SIMULATION</span><h2>Genesis Environment</h2></div><span id="worldTime" class="voice-state">TICK 0</span></div><div class="sim"><div id="grid" class="gridworld"></div></div><div class="legend"><span><i class="plain"></i>plain</span><span><i class="forest"></i>forest</span><span><i class="water"></i>water</span><span><i class="resource"></i>resource</span><span><i class="genesis"></i>Genesis</span></div><div id="simMeta" class="sim-meta">Loading simulation...</div></section>
-
-  <section class="stats">
-    <article><span>WORLD OBJECTS</span><strong id="world">0</strong></article>
-    <article><span>TOOLS</span><strong id="tools">0</strong></article>
-    <article><span>MEMORY</span><strong id="memory">0</strong></article>
-    <article><span>LEARNING</span><strong id="learning">0</strong></article>
-  </section>
-
-  <section class="interaction panel">
-    <div class="panel-head"><div><span class="eyebrow">INTERACTION</span><h2>Talk to Genesis</h2></div><span id="voiceState" class="voice-state">VOICE READY</span></div>
-    <div id="conversation" class="conversation">
-      <div class="bubble genesis"><span>GENESIS</span><p>Hello. I am online. Talk to me.</p></div>
-    </div>
-    <div class="composer">
-      <button id="mic" class="mic" title="Speak to Genesis">🎙️</button>
-      <input id="message" autocomplete="off" placeholder="Talk to Genesis..." />
-      <button id="send" class="send">SEND</button>
-    </div>
-    <div class="quick">
-      <button data-message="What is your status?">STATUS</button>
-      <button data-message="What tools do you have?">TOOLS</button>
-      <button data-message="What do you remember?">MEMORY</button>
-      <button data-message="Observe the world.">OBSERVE</button>
-    </div>
-  </section>
-
-  <section class="world-panel panel">
-    <div class="panel-head"><div><span class="eyebrow">LIVE WORLD</span><h2>Activity</h2></div></div>
-    <pre id="events">Waiting for Genesis...</pre>
-  </section>
-
-  <button id="kill" class="kill">EMERGENCY KILL SWITCH</button>
-  <p class="footer-note">Experimental build • voice uses your browser's speech capabilities • deeper cognition is under active development</p>
-</main>
-<script src="/app.js"></script>
-</body>
-</html>
+<div id="world3d"></div>
+<div class="hud">
+<header class="topbar"><div><div class="eyebrow">GENESIS WORLD / LIVE SIMULATION</div><h1>Genesis</h1><p>Enter the world. Observe the being. Talk to it.</p></div><div id="status" class="status">CONNECTING</div></header>
+<div class="world-hud"><div class="hud-chip"><span>TICK</span><b id="tick">0</b></div><div class="hud-chip"><span>POSITION</span><b id="position">—</b></div><div class="hud-chip"><span>ENERGY</span><b id="energy">—</b></div><div class="hud-chip"><span>AGE</span><b id="age">—</b></div></div>
+<div class="world-actions"><button id="follow">FOLLOW GENESIS</button><button id="resetView">RESET VIEW</button></div>
+<button id="kill" class="kill">EMERGENCY KILL SWITCH</button>
+<section class="bottom-panel"><div class="panel-head"><div><div class="eyebrow">DIRECT CONTACT</div><h2>Talk to Genesis</h2></div><span id="voiceState" class="voice-state">VOICE READY</span></div>
+<div id="conversation" class="conversation"><div class="bubble genesis"><span>GENESIS</span><p>I am awake inside my world. You can talk to me.</p></div></div>
+<div class="composer"><button id="mic" class="mic">🎙️</button><input id="message" autocomplete="off" placeholder="Talk to Genesis..."><button id="send" class="send">SEND</button></div></section>
+<div class="world-labels"><span>🌲 FOREST</span><span>💧 WATER</span><span>🏠 BUILDINGS</span><span>💻 COMPUTER LAB</span><span>🧠 GENESIS</span></div>
+</div>
+<script src="/app.js"></script><script type="module" src="/world3d.js"></script></body></html>
