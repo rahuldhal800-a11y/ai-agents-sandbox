@@ -8,5 +8,20 @@ dependencies = []
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "ruff>=0.6"]
 
+[tool.setuptools.packages.find]
+include = [
+  "runtime*",
+  "digital_world*",
+  "agents*",
+  "cognition*",
+  "memory*",
+  "world*",
+  "labs*",
+  "agent_registry*",
+  "evaluations*",
+  "configs*",
+]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
