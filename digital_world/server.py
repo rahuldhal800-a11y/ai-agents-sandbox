@@ -5,8 +5,6 @@ from pathlib import Path
 import json
 import threading
 import time
-import threading
-import time
 
 from .bootstrap import create_genesis
 from .monitor import Monitor
@@ -22,16 +20,6 @@ def autonomous_loop() -> None:
         time.sleep(0.35)
 
 
-threading.Thread(target=autonomous_loop, daemon=True, name="genesis-autonomy").start()
-
-
-def world_loop() -> None:
-    while genesis.alive:
-        time.sleep(1)
-        genesis.world.step()
-
-
-threading.Thread(target=world_loop, daemon=True, name="genesis-world").start()
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -95,5 +83,10 @@ def serve(host: str = "0.0.0.0", port: int = 8765) -> None:
     ThreadingHTTPServer((host, port), Handler).serve_forever()
 
 
+def start_autonomy() -> None:
+    threading.Thread(target=autonomous_loop, daemon=True, name="genesis-autonomy").start()
+
+
 if __name__ == "__main__":
+    start_autonomy()
     serve()
