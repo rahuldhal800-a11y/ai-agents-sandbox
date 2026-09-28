@@ -1,4 +1,4 @@
-"""Bootstrap Genesis without an AI API or pretrained model."""
+"""Bootstrap Genesis and its initial world tools without an AI API or pretrained model."""
 
 from .being import Genesis
 from .tools import Tool
@@ -16,6 +16,11 @@ def create_genesis() -> Genesis:
         name="write_world",
         description="Write a value into the digital world state.",
         function=lambda key, value: being.world.write(key, value),
+    ))
+    being.tools.register(Tool(
+        name="advance_world",
+        description="Advance the digital world's simulation by one tick.",
+        function=lambda: being.world.step(),
     ))
     return being
 
