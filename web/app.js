@@ -1,4 +1,5 @@
 const $=id=>document.getElementById(id);
+function renderSimulation(s,d){const t=s.terrain||[];const g=(s.entities||[]).find(e=>e.id==="genesis");const r=new Set((s.resources||[]).filter(x=>x.amount>0).map(x=>x.x+","+x.y));$("grid").innerHTML="";for(let y=0;y<t.length;y++){for(let x=0;x<t[y].length;x++){const c=document.createElement("div");c.className="cell "+(t[y][x]||"plain");if(r.has(x+","+y))c.classList.add("resource");if(g&&g.x===x&&g.y===y){c.classList.add("genesis");c.title="Genesis";}$("grid").appendChild(c)}}if(g)$("simMeta").textContent=`Genesis • (${g.x}, ${g.y}) • ${g.status} • energy ${g.energy.toFixed(0)} • hunger ${g.hunger} • thirst ${g.thirst} • age ${g.age} • mutations ${d.mutations||0} • experiences ${d.experiences||0}`;}
 function escapeHtml(v){return String(v).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
 const synth=window.speechSynthesis;
 let recognition=null;
@@ -54,6 +55,7 @@ async function refresh(){
     $("status").style.color=d.alive?"#6ff0b0":"#ff7777";
     $("tick").textContent="TICK "+d.tick;
     const s=d.world||{};
+    renderSimulation(s,d);
     $("worldTime").textContent=(s.time||"00:00")+" • "+(s.cycle||"unknown").toUpperCase();
     $("entities").innerHTML=(s.entities||[]).map(e=>`<div class="entity"><b>${escapeHtml(e.name)}</b><small>${escapeHtml(e.type)} · ${escapeHtml(e.status)}</small><div class="node"><i></i></div></div>`).join("");
     $("world").textContent=Object.keys(d.world||{}).length;
