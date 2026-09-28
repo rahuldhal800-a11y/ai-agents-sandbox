@@ -1,4 +1,4 @@
-"""Genesis: the first LLM-independent digital being prototype."""
+""""Genesis: the first LLM-independent digital being prototype."""
 
 from dataclasses import dataclass, field
 from typing import Any
@@ -54,3 +54,30 @@ class Genesis:
         self.learn_from_result(goal, action, result, reward)
         self.world.step()
         return result
+
+    def talk(self, message: str) -> str:
+        """Small deterministic conversation layer; the cognitive engine will replace this."""
+        text = message.strip()
+        if not text:
+            return "I am listening."
+        if not self.alive:
+            return "I am stopped. Use the reset control when you want to restart me."
+        lower = text.lower()
+        self.memory.remember(self.world.clock, "conversation", {"user": text})
+        if any(word in lower for word in ("hello", "hi", "namaste", "hey")):
+            reply = "Hello. I am Genesis. I am online and ready to explore this digital world."
+        elif "status" in lower or "how are you" in lower:
+            reply = f"I am online. World tick {self.world.clock}. I have {len(self.tools.names())} tools and {len(self.memory.records)} memory records."
+        elif "tool" in lower:
+            reply = "My current tools are: " + ", ".join(self.tools.names()) + "."
+        elif "memory" in lower or "remember" in lower:
+            reply = f"I currently have {len(self.memory.records)} memory records."
+        elif "observe" in lower or "world" in lower:
+            observation = self.perceive()
+            reply = f"I observe the world at tick {self.world.clock}: {observation}."
+        else:
+            reply = f"I heard you say: {text}. My deeper reasoning system is still being built, but I recorded this interaction in memory."
+        self.memory.remember(self.world.clock, "response", {"assistant": reply})
+        self.world.step()
+        return reply
+"
