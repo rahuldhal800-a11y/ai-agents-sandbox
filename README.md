@@ -1,1 +1,1 @@
-# knr-memory-ai
+# ai-agents-sandbox
