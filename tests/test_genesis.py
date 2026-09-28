@@ -28,3 +28,22 @@ def test_genesis_kill_switch():
     assert being.act("anything")["status"] == "killed"
     being.reset()
     assert being.alive
+
+
+def test_world_has_real_terrain_and_resources():
+    being = Genesis()
+    assert len(being.world.state["terrain"]) == being.world.height
+    assert len(being.world.state["resources"]) > 0
+    before = (being.world.genesis["x"], being.world.genesis["y"])
+    being.autonomous_step()
+    assert being.steps == 1
+    assert being.learner.history
+    assert being.world.clock == 1
+    assert before != (being.world.genesis["x"], being.world.genesis["y"]) or being.world.genesis["energy"] < 100
+
+
+def test_policy_evolves():
+    being = Genesis()
+    for _ in range(25):
+        being.autonomous_step()
+    assert being.mutations == 1
