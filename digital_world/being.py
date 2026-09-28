@@ -1,4 +1,4 @@
-""""Genesis: the first LLM-independent digital being prototype."""
+"""Genesis: the first LLM-independent digital being prototype."""
 
 from dataclasses import dataclass, field
 from typing import Any
