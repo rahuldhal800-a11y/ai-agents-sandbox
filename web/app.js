@@ -1,4 +1,5 @@
 const $=id=>document.getElementById(id);
+function escapeHtml(v){return String(v).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
 const synth=window.speechSynthesis;
 let recognition=null;
 let speaking=false;
@@ -52,6 +53,9 @@ async function refresh(){
     $("status").textContent=d.alive?"ONLINE":"STOPPED";
     $("status").style.color=d.alive?"#6ff0b0":"#ff7777";
     $("tick").textContent="TICK "+d.tick;
+    const s=d.world||{};
+    $("worldTime").textContent=(s.time||"00:00")+" • "+(s.cycle||"unknown").toUpperCase();
+    $("entities").innerHTML=(s.entities||[]).map(e=>`<div class="entity"><b>${escapeHtml(e.name)}</b><small>${escapeHtml(e.type)} · ${escapeHtml(e.status)}</small><div class="node"><i></i></div></div>`).join("");
     $("world").textContent=Object.keys(d.world||{}).length;
     $("tools").textContent=(d.tools||[]).length;
     $("memory").textContent=d.memory_count||0;
