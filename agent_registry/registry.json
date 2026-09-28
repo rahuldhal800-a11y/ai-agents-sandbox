@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "agents": [],
+  "states": ["experimental", "testing", "evaluation", "verified", "production_candidate", "production"]
+}
