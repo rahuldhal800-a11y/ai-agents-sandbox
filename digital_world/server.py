@@ -1,10 +1,13 @@
-"""Production-oriented local server for the Digital World UI."""
+"""Web server for the Digital World and Genesis interaction surface."""
 
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 import json
+
 from .bootstrap import create_genesis
 from .monitor import Monitor
 
+ROOT = Path(__file__).resolve().parent.parent
 genesis = create_genesis()
 monitor = Monitor(genesis)
 
@@ -18,6 +21,13 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _json_body(self) -> dict:
+        length = int(self.headers.get("Content-Length", "0"))
+        try:
+            return json.loads(self.rfile.read(length) or b"{}")
+        except json.JSONDecodeError:
+            return {}
+
     def do_GET(self) -> None:
         if self.path == "/api/world":
             self._send(json.dumps(monitor.snapshot()).encode(), "application/json")
@@ -25,28 +35,35 @@ class Handler(BaseHTTPRequestHandler):
         if self.path == "/api/health":
             self._send(b'{"status":"ok","world":"genesis"}', "application/json")
             return
-        if self.path in ("/", "/index.html"):
-            body = open("web/index.html", "rb").read()
-            self._send(body, "text/html; charset=utf-8")
-            return
-        if self.path == "/app.js":
-            body = open("web/app.js", "rb").read()
-            self._send(body, "text/javascript; charset=utf-8")
-            return
-        if self.path == "/style.css":
-            body = open("web/style.css", "rb").read()
-            self._send(body, "text/css; charset=utf-8")
+        files = {
+            "/": ("web/index.html", "text/html; charset=utf-8"),
+            "/index.html": ("web/index.html", "text/html; charset=utf-8"),
+            "/app.js": ("web/app.js", "text/javascript; charset=utf-8"),
+            "/style.css": ("web/style.css", "text/css; charset=utf-8"),
+        }
+        if self.path in files:
+            filename, content_type = files[self.path]
+            body = (ROOT / filename).read_bytes()
+            self._send(body, content_type)
             return
         self.send_error(404)
 
     def do_POST(self) -> None:
-        if self.path != "/api/kill":
-            self.send_error(404)
+        if self.path == "/api/kill":
+            payload = self._json_body()
+            monitor.kill(str(payload.get("reason", "Operator emergency stop")))
+            self._send(b'{"status":"killed"}', "application/json")
             return
-        length = int(self.headers.get("Content-Length", "0"))
-        payload = json.loads(self.rfile.read(length) or b"{}")
-        monitor.kill(str(payload.get("reason", "Operator emergency stop")))
-        self._send(b'{"status":"killed"}', "application/json")
+        if self.path == "/api/talk":
+            payload = self._json_body()
+            message = str(payload.get("message", "")).strip()
+            if not message:
+                self._send(b'{"error":"message is required"}', "application/json", 400)
+                return
+            reply = genesis.talk(message)
+            self._send(json.dumps({"reply": reply}).encode(), "application/json")
+            return
+        self.send_error(404)
 
     def log_message(self, *_args) -> None:
         return
