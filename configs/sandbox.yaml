@@ -1,0 +1,27 @@
+version: 1
+sandbox:
+  mode: isolated
+  autonomous_loop: true
+  max_concurrent_agents: 8
+  network:
+    enabled: true
+    external_access: mediated
+    internal_dns: true
+  lifecycle:
+    - experimental
+    - testing
+    - evaluation
+    - verified
+    - production_candidate
+    - production
+  promotion:
+    production_requires_approval: true
+  capabilities:
+    code_execution: true
+    filesystem: true
+    databases: true
+    simulations: true
+    model_training: true
+    sub_agents: true
+    web_research: true
+    external_secrets: mediated
