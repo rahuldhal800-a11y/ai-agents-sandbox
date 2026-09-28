@@ -3,6 +3,8 @@
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import json
+import threading
+import time
 
 from .bootstrap import create_genesis
 from .monitor import Monitor
@@ -10,6 +12,15 @@ from .monitor import Monitor
 ROOT = Path(__file__).resolve().parent.parent
 genesis = create_genesis()
 monitor = Monitor(genesis)
+
+
+def world_loop() -> None:
+    while genesis.alive:
+        time.sleep(1)
+        genesis.world.step()
+
+
+threading.Thread(target=world_loop, daemon=True, name="genesis-world").start()
 
 
 class Handler(BaseHTTPRequestHandler):
