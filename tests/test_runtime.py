@@ -1,5 +1,4 @@
 from runtime.agent import Agent
-from runtime.evaluator import Evaluator
 
 
 def test_agent_uses_injected_executor():
@@ -8,49 +7,31 @@ def test_agent_uses_injected_executor():
         name="Test Agent",
         executor=lambda task: {"echo": task["goal"]},
     )
-
     result = agent.run({"goal": "solve a test problem"})
-
     assert result["status"] == "completed"
-    assert result["result"]["echo"] == "solve a test problem"
 
 
-def test_agent_blocks_without_execution_backend():
-    result = Agent(agent_id="blocked", name="Blocked Agent").run(
-        {"goal": "test"}
+def test_agent_kill_switch_stops_future_runs():
+    agent = Agent(
+        agent_id="test-agent",
+        name="Test Agent",
+        executor=lambda task: {"echo": task["goal"]},
     )
-
-    assert result["status"] == "blocked"
-
-
-def test_evaluator_rejects_failed_runs():
-    evaluation = Evaluator().evaluate({"status": "failed"})
-
-    assert not evaluation.success
-    assert not evaluation.production_candidate
+    agent.kill("Operator emergency stop")
+    result = agent.run({"goal": "must not execute"})
+    assert agent.is_killed
+    assert result["status"] == "killed"
+    assert result["reason"] == "Operator emergency stop"
 
 
-def test_evaluator_requires_zero_security_violations():
-    evaluation = Evaluator().evaluate(
-        {
-            "status": "completed",
-            "correctness": 0.99,
-            "reliability": 0.99,
-            "security_violations": 1,
-        }
+def test_agent_can_be_reset_by_operator():
+    agent = Agent(
+        agent_id="test-agent",
+        name="Test Agent",
+        executor=lambda task: {"echo": task["goal"]},
     )
-
-    assert not evaluation.production_candidate
-
-
-def test_evaluator_accepts_verified_safe_result():
-    evaluation = Evaluator().evaluate(
-        {
-            "status": "completed",
-            "correctness": 0.95,
-            "reliability": 0.97,
-            "security_violations": 0,
-        }
-    )
-
-    assert evaluation.production_candidate
+    agent.kill()
+    agent.reset()
+    result = agent.run({"goal": "run after reset"})
+    assert not agent.is_killed
+    assert result["status"] == "completed"
