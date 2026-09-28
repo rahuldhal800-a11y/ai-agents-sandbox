@@ -19,6 +19,8 @@ class Monitor:
             "tools": self.being.discover_tools(),
             "learning": self.being.learner.values,
             "memory_count": len(self.being.memory.recall(100000)),
+            "experiences": len(self.being.learner.history),
+            "mutations": self.being.mutations,
             "events": self.events[-20:],
         }
 
