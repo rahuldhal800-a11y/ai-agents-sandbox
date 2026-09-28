@@ -80,4 +80,3 @@ class Genesis:
         self.memory.remember(self.world.clock, "response", {"assistant": reply})
         self.world.step()
         return reply
-"
